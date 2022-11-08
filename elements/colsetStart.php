@@ -123,8 +123,8 @@ class colsetStart extends ContentElement
 		/**
 		 * CSS Code in das Pagelayout einfügen
 		 */
-		$mainCSS = $GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'] ? $GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'] : false;
-		$IEHacksCSS = $GLOBALS['TL_SUBCL'][$this->strSet]['files']['ie'] ? $GLOBALS['TL_SUBCL'][$this->strSet]['files']['ie'] : false;
+		$mainCSS = isset($GLOBALS['TL_SUBCL'][$this->strSet]['files']['css']) ? $GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'] : false;
+		$IEHacksCSS = isset($GLOBALS['TL_SUBCL'][$this->strSet]['files']['ie']) ? $GLOBALS['TL_SUBCL'][$this->strSet]['files']['ie'] : false;
 
         if($mainCSS) $GLOBALS['TL_CSS']['subcolumns'] = $mainCSS;
 		if($IEHacksCSS) $GLOBALS['TL_HEAD']['subcolumns'] = '<!--[if lte IE 7]><link href="'.$IEHacksCSS.'" rel="stylesheet" type="text/css" /><![endif]--> ';
