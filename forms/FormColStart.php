@@ -62,8 +62,12 @@ class FormColStart extends \Widget
 	 */
 	public function generate()
 	{
-		$this->strSet = $GLOBALS['TL_CONFIG']['subcolumns'] ? $GLOBALS['TL_CONFIG']['subcolumns'] : 'yaml3';
-		
+		$this->strSet = $GLOBALS['TL_CONFIG']['subcolumns'] ?: 'yaml3';
+
+        if (class_exists('\HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle')) {
+            $this->strSet = \HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle::validateTypeString($this->strSet);
+        }
+
 		if (TL_MODE == 'BE')
 		{
             $arrColor = unserialize($this->fsc_color);
