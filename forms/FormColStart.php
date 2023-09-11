@@ -165,7 +165,7 @@ class FormColStart extends \Widget
         $scTypeClass = ' col-' . $this->fsc_type;
 
         if (class_exists('\HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle')) {
-            if (\HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle::validSubtype($this->fsc_type))
+            if (\HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle::validSubtype($this->strSet))
                 $scTypeClass = '';
         }
 
