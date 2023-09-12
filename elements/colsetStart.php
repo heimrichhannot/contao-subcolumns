@@ -24,6 +24,7 @@ namespace FelixPfeiffer\Subcolumns;
 
 use Contao\BackendTemplate;
 use Contao\ContentElement;
+use HeimrichHannot\Subcolumns\SubcolumnTypes;
 
 /**
  * Class colsetStart 
@@ -52,7 +53,7 @@ class colsetStart extends ContentElement
 	 */
 	public function generate()
 	{
-		$this->strSet = $GLOBALS['TL_CONFIG']['subcolumns'] ? $GLOBALS['TL_CONFIG']['subcolumns'] : 'yaml3';
+        $this->strSet = SubcolumnTypes::compatSetType();
 
 		if (TL_MODE == 'BE')
 		{
@@ -112,6 +113,8 @@ class colsetStart extends ContentElement
 	 */
 	protected function compile()
 	{
+        $this->strSet = SubcolumnTypes::compatSetType();
+
         if (!isset($GLOBALS['TL_SUBCL'][$this->strSet])) {
             throw new \Exception(
                 "The requested column set type could not be found. "

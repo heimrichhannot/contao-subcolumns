@@ -38,6 +38,7 @@ ClassLoader::addClasses(array
 	// Modules
 	'FelixPfeiffer\Subcolumns\ModuleSubcolumns' => 'system/modules/Subcolumns/modules/ModuleSubcolumns.php',
 	'tl_subcolumnsCallback'                     => 'system/modules/Subcolumns/tl_subcolumnsCallback.php',
+    'HeimrichHannot\Subcolumns\SubcolumnTypes'  => 'system/modules/Subcolumns/modules/SubcolumnTypes.php'
 ));
 
 

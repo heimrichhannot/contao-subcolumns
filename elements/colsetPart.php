@@ -21,6 +21,8 @@
 
 namespace FelixPfeiffer\Subcolumns;
 
+use HeimrichHannot\Subcolumns\SubcolumnTypes;
+
 /**
  * Class colsetPart 
  *
@@ -49,7 +51,7 @@ class colsetPart extends \ContentElement
 	 */
 	public function generate()
 	{
-		$this->strSet = $GLOBALS['TL_CONFIG']['subcolumns'] ? $GLOBALS['TL_CONFIG']['subcolumns'] : 'yaml3';
+        $this->strSet = SubcolumnTypes::compatSetType();
 		
 		if (TL_MODE == 'BE')
 		{

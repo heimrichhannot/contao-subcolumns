@@ -155,8 +155,7 @@ class tl_content_sc extends tl_content
 	 */
 	public function getAllTypes()
 	{
-		$strSet = $GLOBALS['TL_CONFIG']['subcolumns'] ? $GLOBALS['TL_CONFIG']['subcolumns'] : 'yaml3';
-		
+		$strSet = \HeimrichHannot\Subcolumns\SubcolumnTypes::compatSetType();
 		return array_keys($GLOBALS['TL_SUBCL'][$strSet]['sets']);
 	}
 	
@@ -165,7 +164,7 @@ class tl_content_sc extends tl_content
 	 */
 	public function createPalette(DataContainer $dc)
 	{	
-		$strSet = $GLOBALS['TL_CONFIG']['subcolumns'] ? $GLOBALS['TL_CONFIG']['subcolumns'] : 'yaml3';
+		$strSet = \HeimrichHannot\Subcolumns\SubcolumnTypes::compatSetType();
 			
 		$strGap = $GLOBALS['TL_SUBCL'][$strSet]['gap'] ? ',sc_gapdefault,sc_gap' : '';
 		$strEquilize = isset($GLOBALS['TL_SUBCL'][$strSet]['equalize']) && $GLOBALS['TL_SUBCL'][$strSet]['equalize']  ? '{colheight_legend:hide},sc_equalize;' : '';
@@ -204,7 +203,7 @@ class tl_content_sc extends tl_content
 		
 		if($dc->activeRecord->type != 'colsetStart' || $dc->activeRecord->sc_type == "") return '';
 		
-		$strSet = $GLOBALS['TL_CONFIG']['subcolumns'] ? $GLOBALS['TL_CONFIG']['subcolumns'] : 'yaml3';
+		$strSet = \HeimrichHannot\Subcolumns\SubcolumnTypes::compatSetType();
 		
 		$sc_type = $dc->activeRecord->sc_type;
 
