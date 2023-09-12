@@ -111,8 +111,7 @@ class tl_subcolumnsCallback extends Backend
 		}
 		
     }
-	
-	
+
 	/**
      * Copy a colset
      * 
@@ -120,95 +119,56 @@ class tl_subcolumnsCallback extends Backend
      */
 	public function copyCheck($pid)
 	{
-			
-		$objColstarts = $this->Database->prepare("SELECT id,sc_childs FROM tl_content WHERE pid=? AND type=? ORDER BY sorting")
-												->execute($pid,'colsetStart');
-		
-		if($objColstarts->numRows > 0)
-		{
-			$parent = 0;
-			$childs = array();
-			$parents = array();
-			while($objColstarts->next())
-			{
-				$sc_name = 'colset.' . $objColstarts->id;
-				$sc_parent = $objColstarts->id;
-				$parent = $objColstarts->id;
-				$oldChilds = unserialize($objColstarts->sc_childs);
-				if (is_array($oldChilds)) {
-                    			$oldChildParent = $this->Database->prepare("SELECT sc_parent FROM tl_content WHERE id=?")
-                        			->limit(1)
-                        			->execute($oldChilds[0]['id']);
-	
-        			        $newChilds = $this->Database->prepare("SELECT id,type FROM tl_content WHERE pid=? AND sc_parent=? AND type != 'colsetStart'")
-                        			->execute($pid,$oldChildParent->sc_parent);
-                    			$i=1;
-                    			while($newChilds->next())
-                    			{
-                        			$childs[$parent]['sc_childs'][] = $newChilds->id;
-                        			$parents[$newChilds->id]['sc_parent'] = $parent;
-                        			$parents[$newChilds->id]['sc_name'] = $sc_name . ($newChilds->type=="colsetPart" ? '-Part-' . $i : '-End');
-                        			$parents[$newChilds->id]['sc_sortid'] = $i;
-                        			$i++;
-                    			}
-                    			$childs[$parent]['sc_parent'] = $sc_parent;
-                    			$childs[$parent]['sc_name'] = $sc_name;
-                    			sort($childs[$parent]['sc_childs']);
-                		}
+		$row = $this->Database->prepare("SELECT id, sc_childs, sc_parent FROM tl_content WHERE pid=? AND type=? ORDER BY sorting")
+			->execute($pid, 'colsetStart');
+
+		if ($row->numRows < 1) return;
+
+		$typeToNameMap = [
+			"colsetStart" => "Start",
+			"colsetPart" => "Part",
+			"colsetEnd" => "End"
+		];
+
+		while ($row->next()) {
+
+			$parent = $row->id;
+			$oldParent = $row->sc_parent;
+			$newSCName = "colset.$row->id";
+			$oldChilds = unserialize($row->sc_childs);
+
+			if (!is_array($oldChilds)) continue;
+
+			$this->Database->prepare("UPDATE tl_content %s WHERE pid=? AND sc_parent=?")
+				->set(['sc_parent' => $parent])
+				->execute($pid, $oldParent);
+
+			$child = $this->Database->prepare("SELECT id, type FROM tl_content WHERE pid=? AND sc_parent=? AND id!=? ORDER BY sorting")
+				->execute($pid, $parent, $parent);
+
+			if ($child->numRows < 1) continue;
+
+			$childIds = [];
+			while ($child->next()) {
+				$childIds[] = $child->id;
+				$childTypes[$child->id] = $child->type;
 			}
-			
-			foreach($childs as $key=>$child)
-			{
+			sort($childIds);
+
+			$this->Database->prepare("UPDATE tl_content %s WHERE id=?")
+				->set(['sc_name' => $newSCName, 'sc_childs' => $childIds])
+				->execute($parent);
+
+			$partNum = 1;
+			foreach ($childTypes as $id => $type) {
+				$newchildSCName = $newSCName . "-$typeToNameMap[$type]" . ($type === "colsetPart" ? "-" . $partNum++ : '');
 				$this->Database->prepare("UPDATE tl_content %s WHERE id=?")
-											->set(array('sc_parent'=>$child['sc_parent'],'sc_childs'=>$child['sc_childs'],'sc_name'=>$child['sc_name']))
-											->execute($key);
+					->set(['sc_name' => $newchildSCName])
+					->execute($id);
 			}
-			
-			foreach($parents as $key=>$parent)
-			{
-				$this->Database->prepare("UPDATE tl_content %s WHERE id=?")
-											->set(array('sc_parent'=>$parent['sc_parent'],'sc_name'=>$parent['sc_name'],'sc_sortid'=>$parent['sc_sortid']))
-											->execute($key);
-			}
-			
-			
-			
-			
-			
-			/*$parent = 0;
-			$childs = array();
-			$parents = array();
-			while($newColset->next())
-			{
-				$id = $newColset->id;
-				if($newColset->type == "colsetStart")
-				{
-					$parent = $id;
-					$childs[$parent] = array();
-				}
-				else if($newColset->type == "colsetPart" || $newColset->type == "colsetEnd")
-				{
-					$childs[$parent][] = $id;
-					$parents[$id] = $parent;
-				}
-			}
-			
-			foreach($childs as $key=>$value)
-			{
-				$this->Database->prepare("UPDATE tl_content %s WHERE id=?")
-											->set(array('sc_childs'=>$value))
-											->execute($key);
-			}
-			
-			foreach($parents as $key=>$value)
-			{
-				$this->Database->prepare("UPDATE tl_content %s WHERE id=?")
-											->set(array('sc_parent'=>$value))
-											->execute($key);
-			}*/
-			
+
 		}
-			
+
 	}
 	
 	public function formCheck($intId,DataContainer $dc)
