@@ -6,7 +6,8 @@ class SubcolumnTypes
 {
     private static $strSet = null;
 
-    public static function compatSetType($default = 'yaml3') {
+    public static function compatSetType($default = 'yaml3'): string
+    {
         if (is_string(self::$strSet)) return self::$strSet;
 
         $strSet = $GLOBALS['TL_CONFIG']['subcolumns'] ?? $default;
