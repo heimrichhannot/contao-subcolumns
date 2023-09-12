@@ -204,38 +204,17 @@ class colsetPart extends \ContentElement
     {
         if (!is_array($color))
         {
-            return '#' . $this->shortenHexColor($color);
+            return '#' . $color;
         }
         elseif (!isset($color[1]) || empty($color[1]))
         {
-            return '#' . $this->shortenHexColor($color[0]);
+            return '#' . $color[0];
         }
         else
         {
             return 'rgba(' . implode(',', $this->convertHexColor($color[0], $blnWriteToFile, $vars)) . ','. ($color[1] / 100) .')';
         }
     }
-
-
-    /**
-     * Try to shorten a hex color
-     * @param string
-     * @return string
-     */
-    protected function shortenHexColor($color)
-    {
-        if (empty($color)) {
-            return '';
-        }
-
-        if ($color[0] == $color[1] && $color[2] == $color[3] && $color[4] == $color[5])
-        {
-            return $color[0] . $color[2] . $color[4];
-        }
-
-        return $color;
-    }
-
 
     /**
      * Convert hex colors to rgb
