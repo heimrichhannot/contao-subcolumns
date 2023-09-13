@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.1.3]
+- Removed: Hex color shortening
+
 ## [4.0.3] - 2023-01-30
 - Fixed: error while copying articles ([#3], [@zonky2])
 
