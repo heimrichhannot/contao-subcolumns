@@ -176,7 +176,7 @@ class colsetStart extends ContentElement
 		#$container = unserialize($this->sc_container);
         $this->Template->useInside = $blnUseInner;
 
-        $scTypeClass = ' col-' . $this->fsc_type;
+        $scTypeClass = ' col-' . $this->sc_type;
 
         if (class_exists('\HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle')) {
             if (\HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle::validSubtype($this->strSet))

@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.1.4]
+- Fixed: scTypeClass at colsetStart element
+
 ## [4.1.3]
 - Removed: Hex color shortening
 
