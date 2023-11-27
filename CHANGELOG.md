@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.1.6] - 2023-11-27
+- Fixed warnings (including two PRs from [@zonky2])
+
 ## [4.1.4]
 - Fixed: scTypeClass at colsetStart element
 
@@ -35,5 +38,7 @@ All notable changes to this project will be documented in this file.
 [@Wusch]: https://github.com/Wusch
 [@kp-mtrame]: https://github.com/kp-mtrame
 [@zonky2]: https://github.com/zonky2
+[#14]: https://github.com/heimrichhannot/contao-subcolumns/pull/14
+[#13]: https://github.com/heimrichhannot/contao-subcolumns/pull/13
 [#3]: https://github.com/heimrichhannot/contao-subcolumns/pull/3
 [#2]: https://github.com/heimrichhannot/contao-subcolumns/pull/2

@@ -60,7 +60,7 @@ class colsetStart extends ContentElement
 
             $arrColor = \unserialize($this->sc_color);
 
-            if(!$GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'])
+            if (!($GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'] ?? null))
             {
                 $this->Template = new BackendTemplate('be_subcolumns');
                 $this->Template->setColor = $this->compileColor($arrColor);
@@ -147,7 +147,7 @@ class colsetStart extends ContentElement
 
 		if($this->sc_gapdefault == 1 && $useGap)
 		{
-			$gap_value = $this->sc_gap != "" ? $this->sc_gap : ($GLOBALS['TL_CONFIG']['subcolumns_gapdefault'] ?? : 12);
+			$gap_value = $this->sc_gap != "" ? $this->sc_gap : ($GLOBALS['TL_CONFIG']['subcolumns_gapdefault'] ?? 12);
 			$gap_unit = 'px';
 			
 			if(count($container) == 2)

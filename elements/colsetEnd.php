@@ -21,6 +21,8 @@
 namespace FelixPfeiffer\Subcolumns;
 
 
+use Contao\BackendTemplate;
+use Contao\ContentElement;
 use HeimrichHannot\Subcolumns\SubcolumnTypes;
 
 /**
@@ -30,7 +32,7 @@ use HeimrichHannot\Subcolumns\SubcolumnTypes;
  * @author     Felix Pfeiffer <info@felixpfeiffer.com>
  * @package    Subcolumns
  */
-class colsetEnd extends \ContentElement
+class colsetEnd extends ContentElement
 {
 
 	/**
@@ -57,9 +59,9 @@ class colsetEnd extends \ContentElement
 
             $arrColor = unserialize($this->sc_color);
 
-            if(!$GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'])
+            if(!($GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'] ?? null))
             {
-                $this->Template = new \BackendTemplate('be_subcolumns');
+                $this->Template = new BackendTemplate('be_subcolumns');
                 $this->Template->setColor = $this->compileColor($arrColor);
                 $this->Template->colsetTitle = '### COLUMNSET START '.$this->sc_type.' <strong>'.$this->sc_name.'</strong> ###';
 

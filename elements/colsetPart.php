@@ -21,6 +21,8 @@
 
 namespace FelixPfeiffer\Subcolumns;
 
+use Contao\BackendTemplate;
+use Contao\ContentElement;
 use HeimrichHannot\Subcolumns\SubcolumnTypes;
 
 /**
@@ -30,7 +32,7 @@ use HeimrichHannot\Subcolumns\SubcolumnTypes;
  * @author     Felix Pfeiffer <info@felixpfeiffer.com>
  * @package    Subcolumns
  */
-class colsetPart extends \ContentElement
+class colsetPart extends ContentElement
 {
 
 	/**
@@ -75,7 +77,7 @@ class colsetPart extends \ContentElement
 
             if(!$GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'])
             {
-                $this->Template = new \BackendTemplate('be_subcolumns');
+                $this->Template = new BackendTemplate('be_subcolumns');
                 $this->Template->setColor = $this->compileColor($arrColor);
                 $this->Template->colsetTitle = '### COLUMNSET START '.$this->sc_type.' <strong>'.$this->sc_name.'</strong> ###';
                 #$this->Template->visualSet = $strMiniset;
@@ -128,7 +130,7 @@ class colsetPart extends \ContentElement
 		
 		if($this->sc_gapdefault == 1 && $useGap)
 		{
-            $gap_value = $this->sc_gap != "" ? $this->sc_gap : ($GLOBALS['TL_CONFIG']['subcolumns_gapdefault'] ?? : 12);
+            $gap_value = $this->sc_gap != "" ? $this->sc_gap : ($GLOBALS['TL_CONFIG']['subcolumns_gapdefault'] ?? 12);
 			$gap_unit = 'px';
 			
 			if(count($container) == 2)
@@ -186,7 +188,7 @@ class colsetPart extends \ContentElement
             $blnUseInner = false;
         }
 
-        $this->Template->colID = $arrCounts[$this->sc_sortid];
+        $this->Template->colID = $arrCounts[$this->sc_sortid] ?? '';
         $this->Template->useInside = $blnUseInner;
 		$this->Template->column = $container[$this->sc_sortid][0] . ' col_' . ($this->sc_sortid+1) . (($this->sc_sortid == count($container)-1) ? ' last' : '');
 		$this->Template->inside = $this->Template->useInside ? $container[$this->sc_sortid][1] : '';

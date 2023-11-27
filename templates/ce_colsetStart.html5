@@ -4,6 +4,6 @@
 	<!-- first Column //-->
 	<div class="<?php echo $this->column; ?>">
 		<?php if($this->useInside): ?>
-		<div class="<?php echo $this->inside; ?>"<?php if($this->gap['right']): ?> style="padding-right:<?php echo $this->gap['right']; ?>;"<?php endif; ?>>
+		<div class="<?php echo $this->inside; ?>"<?php if($this->gap['right'] ?? false): ?> style="padding-right:<?php echo $this->gap['right']; ?>;"<?php endif; ?>>
 		<?php endif ?>
 			
