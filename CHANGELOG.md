@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [4.1.6] - 2023-11-27
+## [4.1.5] - 2023-11-27
 - Fixed warnings (including two PRs from [@zonky2])
 
 ## [4.1.4]
