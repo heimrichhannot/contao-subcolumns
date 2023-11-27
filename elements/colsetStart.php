@@ -147,7 +147,7 @@ class colsetStart extends ContentElement
 
 		if($this->sc_gapdefault == 1 && $useGap)
 		{
-			$gap_value = $this->sc_gap != "" ? $this->sc_gap : ($GLOBALS['TL_CONFIG']['subcolumns_gapdefault'] ? $GLOBALS['TL_CONFIG']['subcolumns_gapdefault'] : 12);
+			$gap_value = $this->sc_gap != "" ? $this->sc_gap : ($GLOBALS['TL_CONFIG']['subcolumns_gapdefault'] ?? : 12);
 			$gap_unit = 'px';
 			
 			if(count($container) == 2)
