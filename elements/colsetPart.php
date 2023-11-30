@@ -75,7 +75,7 @@ class colsetPart extends ContentElement
 
             $arrColor = unserialize($this->sc_color);
 
-            if(!$GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'])
+            if (!($GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'] ?? false))
             {
                 $this->Template = new BackendTemplate('be_subcolumns');
                 $this->Template->setColor = $this->compileColor($arrColor);
@@ -87,7 +87,7 @@ class colsetPart extends ContentElement
             }
 
             $GLOBALS['TL_CSS']['subcolumns'] = 'system/modules/Subcolumns/assets/be_style.css';
-            $GLOBALS['TL_CSS']['subcolumns_set'] = $GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'];
+            $GLOBALS['TL_CSS']['subcolumns_set'] = $GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'] ?? false;
 
             $arrColset = $GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->sc_type];
             $strSCClass = $GLOBALS['TL_SUBCL'][$this->strSet]['scclass'];
