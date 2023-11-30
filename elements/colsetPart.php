@@ -57,6 +57,7 @@ class colsetPart extends ContentElement
 		
 		if (TL_MODE == 'BE')
 		{
+            $colID = null;
             switch($this->sc_sortid)
             {
                 case 1:
@@ -81,7 +82,7 @@ class colsetPart extends ContentElement
                 $this->Template->setColor = $this->compileColor($arrColor);
                 $this->Template->colsetTitle = '### COLUMNSET START '.$this->sc_type.' <strong>'.$this->sc_name.'</strong> ###';
                 #$this->Template->visualSet = $strMiniset;
-                $this->Template->hint = sprintf($GLOBALS['TL_LANG']['MSC']['contentAfter'],$colID);
+                $this->Template->hint = sprintf(($GLOBALS['TL_LANG']['MSC']['contentAfter'] ?? ''), $colID);
 
                 return $this->Template->parse();
             }
