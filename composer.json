@@ -21,10 +21,10 @@
 		"source":"https://github.com/heimrichhannot/contao-subcolumns"
 	},
 	"require":{
-		"php":"^7.4 || ^8.0",
-		"contao/core-bundle":"^4.4",
-		"contao-community-alliance/composer-plugin":"~2.4 | ~3.0",
-		"menatwork/contao-multicolumnwizard":"^3.3.7"
+		"php": "^7.4 || ^8.0",
+		"contao/core-bundle": "^4.9 || ^5.0",
+		"contao-community-alliance/composer-plugin": "~2.4 || ~3.0",
+		"menatwork/contao-multicolumnwizard": "^3.3.7"
 	},
 	"autoload":{
 		"classmap":[""]
