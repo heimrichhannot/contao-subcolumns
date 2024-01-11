@@ -28,6 +28,8 @@
 
 namespace FelixPfeiffer\Subcolumns;
 
+use HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle;
+
 /**
  * Class FormColPart
  *
@@ -64,8 +66,8 @@ class FormColEnd extends \Widget
 	{
 		$this->strSet = $GLOBALS['TL_CONFIG']['subcolumns'] ?: 'yaml3';
 
-        if (class_exists('\HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle')) {
-            $this->strSet = \HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle::validateTypeString($this->strSet);
+        if (class_exists(SubColumnsBootstrapBundle::class)) {
+            $this->strSet = SubColumnsBootstrapBundle::filterTypeString($this->strSet);
         }
 
 		if (TL_MODE == 'BE')
@@ -187,5 +189,3 @@ class FormColEnd extends \Widget
         return $rgb;
     }
 }
-
-?>

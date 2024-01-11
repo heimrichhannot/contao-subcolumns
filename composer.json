@@ -1,42 +1,52 @@
 {
-	"name":"heimrichhannot/subcolumns",
-	"description":"Subcolumns to seperate an article in several columns",
-	"keywords":["columns","yaml","grid","subcolumns"],
-	"type":"contao-module",
-	"license":"LGPL-3.0-or-later",
-	"authors":[
-		{
-			"name":"Felix Pfeiffer",
-			"homepage":"http://www.felixpfeiffer.com/",
-			"role":"Developer"
-		},
-		{
-			"name": "Heimrich & Hannot",
-			"homepage": "https://www.heimrich-hannot.de",
-			"role": "Developer"
-		}
-	],
-	"support":{
-		"issues":"https://github.com/heimrichhannot/contao-subcolumns/issues",
-		"source":"https://github.com/heimrichhannot/contao-subcolumns"
-	},
-	"require":{
-		"php":"^7.4 || ^8.0",
-		"contao/core-bundle":"^4.4",
-		"contao-community-alliance/composer-plugin":"~2.4 | ~3.0",
-		"menatwork/contao-multicolumnwizard":"^3.3.7"
-	},
-	"autoload":{
-		"classmap":[""]
-	},
-	"replace":{
-		"contao-legacy/subcolumns":"*"
-	},
-	"extra":{
-		"contao":{
-			"sources":{
-				"":"system/modules/Subcolumns"
-			}
-		}
-	}
+    "name": "heimrichhannot/subcolumns",
+    "description": "Subcolumns to seperate an article in several columns",
+    "keywords": [
+        "columns",
+        "yaml",
+        "grid",
+        "subcolumns"
+    ],
+    "type": "contao-module",
+    "license": "LGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Felix Pfeiffer",
+            "homepage": "http://www.felixpfeiffer.com/",
+            "role": "Developer"
+        },
+        {
+            "name": "Heimrich & Hannot GmbH",
+            "homepage": "https://www.heimrich-hannot.de",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/heimrichhannot/contao-subcolumns/issues",
+        "source": "https://github.com/heimrichhannot/contao-subcolumns"
+    },
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "contao/core-bundle": "^4.9",
+        "contao-community-alliance/composer-plugin": "~2.4 || ~3.0",
+        "menatwork/contao-multicolumnwizard": "^3.3.7"
+    },
+    "conflict": {
+        "heimrichhannot/contao-subcolumns-bootstrap-bundle": "<1.12"
+    },
+    "autoload": {
+        "classmap": [
+            ""
+        ]
+    },
+    "replace": {
+        "contao-legacy/subcolumns": "*"
+    },
+    "extra": {
+        "contao": {
+            "sources": {
+                "": "system/modules/Subcolumns"
+            }
+        }
+    }
 }
