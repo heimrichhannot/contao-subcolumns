@@ -31,6 +31,9 @@
         "contao-community-alliance/composer-plugin": "~2.4 || ~3.0",
         "menatwork/contao-multicolumnwizard": "^3.3.7"
     },
+    "conflict": {
+        "heimrichhannot/contao-subcolumns-bootstrap-bundle": "<1.12.0"
+    },
     "autoload": {
         "classmap": [
             ""
