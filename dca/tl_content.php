@@ -34,6 +34,8 @@
  * Table tl_content 
  */
 
+use HeimrichHannot\Subcolumns\SubcolumnTypes;
+
 $GLOBALS['TL_DCA']['tl_content']['fields']['sc_name'] = array
 (
 	'label'		=> &$GLOBALS['TL_LANG']['tl_content']['sc_name'],
@@ -164,7 +166,7 @@ class tl_content_sc extends tl_content
 	 */
 	public function createPalette(DataContainer $dc)
 	{	
-		$strSet = \HeimrichHannot\Subcolumns\SubcolumnTypes::compatSetType();
+		$strSet = SubcolumnTypes::compatSetType();
 			
 		$strGap = $GLOBALS['TL_SUBCL'][$strSet]['gap'] ? ',sc_gapdefault,sc_gap' : '';
 		$strEquilize = isset($GLOBALS['TL_SUBCL'][$strSet]['equalize']) && $GLOBALS['TL_SUBCL'][$strSet]['equalize']  ? '{colheight_legend:hide},sc_equalize;' : '';
@@ -203,11 +205,24 @@ class tl_content_sc extends tl_content
 		
 		if($dc->activeRecord->type != 'colsetStart' || $dc->activeRecord->sc_type == "") return '';
 		
-		$strSet = \HeimrichHannot\Subcolumns\SubcolumnTypes::compatSetType();
+		$strSet = SubcolumnTypes::compatSetType();
 		
 		$sc_type = $dc->activeRecord->sc_type;
 
-		$arrColset = $GLOBALS['TL_SUBCL'][$strSet]['sets'][$sc_type];
+		$arrColset = $GLOBALS['TL_SUBCL'][$strSet]['sets'][$sc_type] ?? null;
+
+		if (!is_array($arrColset)) {
+			$exploded = explode('.', $sc_type);
+			if (count($exploded) == 2) {
+				$trySet = $exploded[0];
+				$tryType = $exploded[1];
+				$tryColset = $GLOBALS['TL_SUBCL'][$trySet]['sets'][$tryType] ?? null;
+				if ($tryColset !== null) {
+					$arrColset = $tryColset;
+					$sc_type = $tryType;
+				}
+			}
+		}
 		
 		$arrChilds = $dc->activeRecord->sc_childs != "" ? unserialize($dc->activeRecord->sc_childs) : "";
 		
@@ -217,6 +232,10 @@ class tl_content_sc extends tl_content
 	
 	private function createColset($objElement,$sc_type,$arrColset,$arrChilds='')
 	{
+		if (!is_array($arrColset)) {
+			return false;
+		}
+
 		$intColcount = count($arrColset) - 2;
 		
 		$this->log('ID= ' . $objElement->id, 'SpaltensetHilfe createColset()', TL_ACCESS);
