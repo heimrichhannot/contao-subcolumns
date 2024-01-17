@@ -34,6 +34,7 @@
  * Table tl_content 
  */
 
+use Contao\DataContainer;
 use HeimrichHannot\Subcolumns\SubcolumnTypes;
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['sc_name'] = array
@@ -157,7 +158,7 @@ class tl_content_sc extends tl_content
 	 */
 	public function getAllTypes()
 	{
-		$strSet = \HeimrichHannot\Subcolumns\SubcolumnTypes::compatSetType();
+		$strSet = SubcolumnTypes::compatSetType();
 		return array_keys($GLOBALS['TL_SUBCL'][$strSet]['sets']);
 	}
 	
@@ -198,36 +199,30 @@ class tl_content_sc extends tl_content
 	
 	/**
 	 * Write the other Sets
-	 * @param object
+	 * @param DataContainer $dc
 	 */
 	public function scUpdate(DataContainer $dc)
 	{
-		
-		if($dc->activeRecord->type != 'colsetStart' || $dc->activeRecord->sc_type == "") return '';
+		if ($dc->activeRecord->sc_columnset ?? false)
+		{
+			// let this be handled by subcolumns-bootstrap-bundle
+			return false;
+		}
+
+		if ($dc->activeRecord->type != 'colsetStart' || $dc->activeRecord->sc_type == "")
+		{
+			return false;
+		}
 		
 		$strSet = SubcolumnTypes::compatSetType();
 		
 		$sc_type = $dc->activeRecord->sc_type;
 
 		$arrColset = $GLOBALS['TL_SUBCL'][$strSet]['sets'][$sc_type] ?? null;
-
-		if (!is_array($arrColset)) {
-			$exploded = explode('.', $sc_type);
-			if (count($exploded) == 2) {
-				$trySet = $exploded[0];
-				$tryType = $exploded[1];
-				$tryColset = $GLOBALS['TL_SUBCL'][$trySet]['sets'][$tryType] ?? null;
-				if ($tryColset !== null) {
-					$arrColset = $tryColset;
-					$sc_type = $tryType;
-				}
-			}
-		}
 		
 		$arrChilds = $dc->activeRecord->sc_childs != "" ? unserialize($dc->activeRecord->sc_childs) : "";
 		
 		return $this->createColset($dc->activeRecord,$sc_type,$arrColset,$arrChilds);
-		
 	}
 	
 	private function createColset($objElement,$sc_type,$arrColset,$arrChilds='')
@@ -526,7 +521,12 @@ class tl_content_sc extends tl_content
 	
 	public function scDelete(DataContainer $dc)
 	{
-		
+		if ($dc->activeRecord->sc_columnset ?? false)
+		{
+			// let this be handled by subcolumns-bootstrap-bundle
+			return false;
+		}
+
 		$delRecord = $this->Database->prepare("SELECT * FROM tl_content WHERE id=?")
 												->execute($dc->id)
 												->fetchAssoc();
@@ -645,7 +645,7 @@ class tl_content_sc extends tl_content
 	
 	}
 	
-	public function scCopy($intId,DataContainer $dc)
+	public function scCopy($intId, DataContainer $dc)
 	{
 		$dc->activeRecord = $this->Database->prepare("SELECT * FROM tl_content WHERE id=?")->execute($intId)->first();
 
@@ -762,7 +762,7 @@ class tl_content_sc extends tl_content
      * HOOK: $GLOBALS['TL_HOOKS']['clipboardCopy']
      * 
      * @param integer $intId
-     * @param datacontainer $dc
+     * @param DataContainer $dc
      * @param boolean $isGrouped
      */
     public function clipboardCopy($intId, DataContainer $dc, $isGrouped)
