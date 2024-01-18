@@ -179,11 +179,6 @@ class colsetStart extends ContentElement
 
         $scTypeClass = ' col-' . $this->sc_type;
 
-        if (class_exists('\HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle')) {
-            if (\HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle::validSubtype($this->strSet))
-                $scTypeClass = '';
-        }
-
         $this->Template->scclass = $equalize . $GLOBALS['TL_SUBCL'][$this->strSet]['scclass'] . ' colcount_' . \count($container) . ' ' . $this->strSet . $scTypeClass . (' sc-type-' . $this->sc_type);
 		$this->Template->column = $container[0][0] . ' col_1' . ' first';
 		$this->Template->inside = $this->Template->useInside ? $container[0][1] : '';
