@@ -24,6 +24,7 @@ namespace FelixPfeiffer\Subcolumns;
 
 use Contao\BackendTemplate;
 use Contao\ContentElement;
+use Exception;
 use HeimrichHannot\Subcolumns\SubcolumnTypes;
 
 /**
@@ -106,17 +107,17 @@ class colsetStart extends ContentElement
 
 		return parent::generate();
 	}
-	
-	/**
-	 * Generate content element
-	 * @return string
-	 */
-	protected function compile()
+
+    /**
+     * Generate content element
+     * @throws Exception
+     */
+	protected function compile(): void
 	{
         $this->strSet = SubcolumnTypes::compatSetType();
 
         if (!isset($GLOBALS['TL_SUBCL'][$this->strSet])) {
-            throw new \Exception(
+            throw new Exception(
                 "The requested column set type could not be found. "
                 ."Type '".$this->strSet."' was requested, but no such type is defined. "
                 ."Maybe your configuration is not correct?"
@@ -137,7 +138,7 @@ class colsetStart extends ContentElement
         }
 
         if (!isset($GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->sc_type])) {
-            throw new \Exception("The requested column type could not be found. ".$this->sc_type." was requested, but no such type is defined in ".$this->strSet.".");
+            throw new Exception("The requested column type could not be found. ".$this->sc_type." was requested, but no such type is defined in ".$this->strSet.".");
         }
 		$container = $GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->sc_type];
 		$useGap = $GLOBALS['TL_SUBCL'][$this->strSet]['gap'];
