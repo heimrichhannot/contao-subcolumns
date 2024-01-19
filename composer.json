@@ -32,7 +32,7 @@
         "menatwork/contao-multicolumnwizard": "^3.3.7"
     },
     "conflict": {
-        "heimrichhannot/contao-subcolumns-bootstrap-bundle": "<1.12.0"
+        "heimrichhannot/contao-subcolumns-bootstrap-bundle": "<1.13.0"
     },
     "autoload": {
         "classmap": [

@@ -22,5 +22,3 @@
  */
 
 $GLOBALS['TL_DCA']['tl_article']['config']['oncopy_callback'][] = array('tl_subcolumnsCallback','articleCheck');
-
-?>

@@ -44,7 +44,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['sc_type'] = array
 	'inputType'     	=> 'select',
 	'options_callback'	=> array('tl_module_sc','getAllTypes'),
 	'eval'          	=> array('submitOnChange'=>true),
-    'sql'               => "varchar(14) NOT NULL default ''"
+    'sql'               => "varchar(255) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['sc_modules'] = array
