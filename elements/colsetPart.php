@@ -125,9 +125,13 @@ class colsetPart extends ContentElement
 	protected function compile()
 	{
 		$arrCounts = array('1'=>'second','2'=>'third','3'=>'fourth','4'=>'fifth');
-		$container = $GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->sc_type];
+		$container = $GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->sc_type] ?? null;
         $useGap = $GLOBALS['TL_SUBCL'][$this->strSet]['gap'];
         $blnUseInner = $GLOBALS['TL_SUBCL'][$this->strSet]['inside'];
+
+        if (!$container) {
+            return;
+        }
 		
 		if($this->sc_gapdefault == 1 && $useGap)
 		{
