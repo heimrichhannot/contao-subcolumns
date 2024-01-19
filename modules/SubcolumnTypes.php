@@ -12,7 +12,7 @@ class SubcolumnTypes
     public static function compatSetType(string $default = 'yaml3'): string
     {
         if (class_exists(SubColumnsBootstrapBundle::class)) {
-            return SubColumnsBootstrapBundle::getSubType();
+            return SubColumnsBootstrapBundle::getProfile();
         }
 
         if (isset(static::$strSet)) {
