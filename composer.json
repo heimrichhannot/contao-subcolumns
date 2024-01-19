@@ -29,7 +29,7 @@
         "php": "^7.4 || ^8.0",
         "contao/core-bundle": "^4.9",
         "contao-community-alliance/composer-plugin": "~2.4 || ~3.0",
-        "menatwork/contao-multicolumnwizard": "^3.3.7"
+        "menatwork/contao-multicolumnwizard-bundle": "^3.3.7"
     },
     "conflict": {
         "heimrichhannot/contao-subcolumns-bootstrap-bundle": "<1.13.0"
