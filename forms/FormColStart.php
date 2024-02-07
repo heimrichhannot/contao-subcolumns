@@ -29,6 +29,7 @@
 namespace FelixPfeiffer\Subcolumns;
 
 use HeimrichHannot\Subcolumns\SubcolumnTypes;
+use HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle;
 
 /**
  * Class FormColStart
@@ -166,9 +167,10 @@ class FormColStart extends \Widget
 
         $scTypeClass = ' col-' . $this->fsc_type;
 
-        if (class_exists('\HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle')) {
-            if (\HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle::validSubtype($this->strSet))
-                $scTypeClass = '';
+        if (class_exists(SubColumnsBootstrapBundle::class)
+            && SubColumnsBootstrapBundle::validProfile($this->strSet))
+        {
+            $scTypeClass = '';
         }
 
 		$objTemplate->scclass = ($this->fsc_equalize ? 'equalize ' : '') . $GLOBALS['TL_SUBCL'][$this->strSet]['scclass'] . ' colcount_' . count($container) . ' ' . $this->strSet . $scTypeClass . (' sc-type-' . $this->sc_type) . ($this->class ? ' ' . $this->class : '');
