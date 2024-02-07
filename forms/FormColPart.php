@@ -67,7 +67,7 @@ class FormColPart extends \Widget
 		$this->strSet = $GLOBALS['TL_CONFIG']['subcolumns'] ?: 'yaml3';
 
         if (class_exists(SubColumnsBootstrapBundle::class)) {
-            $this->strSet = SubColumnsBootstrapBundle::filterTypeString($this->strSet);
+            $this->strSet = SubColumnsBootstrapBundle::filterProfile($this->strSet);
         }
 		
 		if (TL_MODE == 'BE')
