@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * TYPOlight webCMS
@@ -21,7 +21,6 @@
  * @filesource
  */
 
-
 /**
  * Fields
  */
@@ -35,13 +34,8 @@ $GLOBALS['TL_LANG']['tl_content']['sc_parent'] = array('Elternelement', '');
 $GLOBALS['TL_LANG']['tl_content']['sc_childs'] = array('Kindelemente', '');
 $GLOBALS['TL_LANG']['tl_content']['sc_sortid'] = array('Sortierung im Spaltenset', '');
 
-
 /**
  * Legends
  */
 $GLOBALS['TL_LANG']['tl_content']['colset_legend']      = 'Spaltenset Einstellungen';
 $GLOBALS['TL_LANG']['tl_content']['colheight_legend']      = 'Spaltenhöhe';
-
-
-
-?>

@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * TYPOlight Open Source CMS
@@ -26,7 +26,6 @@
  * @filesource
  */
 
-
 /**
  * Fields
  */
@@ -36,7 +35,6 @@ $GLOBALS['TL_LANG']['tl_module']['sc_gapdefault'] = array('User gap', 'Do you wa
 $GLOBALS['TL_LANG']['tl_module']['sc_type'] = array('Columns set', 'Select the type of the column set');
 $GLOBALS['TL_LANG']['tl_module']['sc_equalize'] = array('Equal heights', 'Check this box to use the calss equal heights for this columns set.');
 
-
 /**
  * Reference
  */
@@ -44,4 +42,3 @@ $GLOBALS['TL_LANG']['tl_module']['subcolumns_legend']   = 'Column set';
 $GLOBALS['TL_LANG']['tl_module']['subcolumns_settings_legend'] = 'Column set settings';
 $GLOBALS['TL_LANG']['tl_module']['module']       = 'Module';
 $GLOBALS['TL_LANG']['tl_module']['column']       = 'Column';
-?>

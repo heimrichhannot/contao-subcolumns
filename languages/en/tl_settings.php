@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * TYPOlight webCMS
@@ -21,7 +21,6 @@
  * @filesource
  */
 
-
 /**
  * Fields
  */
@@ -32,5 +31,3 @@ $GLOBALS['TL_LANG']['tl_settings']['subcolumns_gapdefault'] = array('Columnsset 
  * Legends
  */
 $GLOBALS['TL_LANG']['tl_settings']['subcolumns_legend']      = 'Columnset Settings';
-
-?>

@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * TYPOlight webCMS
@@ -46,5 +46,3 @@ $GLOBALS['TL_DCA']['tl_settings']['fields']['subcolumns_gapdefault'] = array
 );
 
 $GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{subcolumns_legend:hide},subcolumns,subcolumns_gapdefault;';
-
-?>

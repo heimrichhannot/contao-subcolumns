@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * TYPOlight Open Source CMS
@@ -26,14 +26,12 @@
  * @filesource
  */
 
-
 /**
  * Form fields
  */
 $GLOBALS['TL_LANG']['FFL']['formcolstart']    = array('Column set start', 'The opening element of a column set');
 $GLOBALS['TL_LANG']['FFL']['formcolpart']    = array('Column set part element', 'The element between two columns.');
 $GLOBALS['TL_LANG']['FFL']['formcolend']    = array('Column set end element', 'The last element of a column set.');
-
 
 /**
  * Fields
@@ -48,5 +46,3 @@ $GLOBALS['TL_LANG']['tl_form_field']['fsc_equalize']           = array('Equal he
  * Legend
 **/
 $GLOBALS['TL_LANG']['tl_form_field']['colsettings_legend'] = 'Columns Settings';
-
-?>

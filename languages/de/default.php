@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * TYPOlight webCMS
@@ -42,5 +42,3 @@ $GLOBALS['TL_LANG']['MSC']['sc_fifth'] = 'fünfte';
 
 $GLOBALS['TL_LANG']['MSC']['sets']['yaml3'] = 'YAML3';
 $GLOBALS['TL_LANG']['MSC']['sets']['yaml4'] = 'YAML4';
-
-?>

@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * TYPOlight webCMS
@@ -22,5 +22,3 @@
  */
 
 $GLOBALS['TL_DCA']['tl_page']['config']['oncopy_callback'][] = array('tl_subcolumnsCallback','pageCheck');
-
-?>
