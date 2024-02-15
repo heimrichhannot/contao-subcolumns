@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
@@ -28,11 +28,7 @@
  * @filesource
  */
 
-
 /**
  * Front end modules
  */
 $GLOBALS['TL_LANG']['FMD']['subcolumns'] = array('Column Set', 'Put front end modules inside columns. The allocation is made similar to a page layout.');
-
-
-?>
