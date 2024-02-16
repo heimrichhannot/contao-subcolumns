@@ -31,7 +31,7 @@
 
 
 /**
- * Table tl_content 
+ * Table tl_content
  */
 
 use Contao\DataContainer;
@@ -137,47 +137,11 @@ $GLOBALS['TL_DCA']['tl_content']['config']['ondelete_callback'][] = array('tl_co
 $GLOBALS['TL_DCA']['tl_content']['config']['oncopy_callback'][] = array('tl_content_sc','scCopy');
 
 /**
- * Operations
-**/
-$getActiveBundles = function () {
-	$bundles = array_keys(System::getContainer()->getParameter('kernel.bundles'));
-
-	$legacy = [
-		'ContaoCoreBundle'       => 'core',
-		'ContaoCalendarBundle'   => 'calendar',
-		'ContaoCommentsBundle'   => 'comments',
-		'ContaoFaqBundle'        => 'faq',
-		'ContaoListingBundle'    => 'listing',
-		'ContaoNewsBundle'       => 'news',
-		'ContaoNewsletterBundle' => 'newsletter'
-	];
-
-	foreach ($legacy as $bundleName => $module)
-	{
-		if (\in_array($bundleName, $bundles))
-		{
-			$bundles[] = $module;
-		}
-	}
-
-	return $bundles;
-};
-
-if (!in_array('ce-access', $getActiveBundles()))
-{
-	$GLOBALS['TL_DCA']['tl_content']['list']['operations']['edit']['button_callback'] = array('tl_content_sc','showEditOperation'); 
-	$GLOBALS['TL_DCA']['tl_content']['list']['operations']['copy']['button_callback'] = array('tl_content_sc','showCopyOperation'); 
-	#$GLOBALS['TL_DCA']['tl_content']['list']['operations']['delete']['button_callback'] = array('tl_content_sc','showDeleteOperation'); 
-	#$GLOBALS['TL_DCA']['tl_content']['list']['operations']['toggle']['button_callback'] = array('tl_content_sc','toggleIcons'); 
-}
-
-
-/**
- * Erweiterung für die tl_conten-Klasse
+ * Erweiterung für die tl_content-Klasse
  */
 class tl_content_sc extends tl_content
 {
-	/* 
+	/*
 	 * Get the colsets depending on the selection from the settings
 	 */
 	public function getAllTypes()
@@ -190,17 +154,26 @@ class tl_content_sc extends tl_content
 	 * Create the palette for the startelement
 	 */
 	public function createPalette(DataContainer $dc)
-	{	
+	{
 		$strSet = SubcolumnTypes::compatSetType();
-			
-		$strGap = $GLOBALS['TL_SUBCL'][$strSet]['gap'] ? ',sc_gapdefault,sc_gap' : '';
-		$strEquilize = isset($GLOBALS['TL_SUBCL'][$strSet]['equalize']) && $GLOBALS['TL_SUBCL'][$strSet]['equalize']  ? '{colheight_legend:hide},sc_equalize;' : '';
-			
+
+		if (empty($GLOBALS['TL_SUBCL'][$strSet])) {
+			dump("Subcolumns profile '$strSet' not found. Please check your settings.");
+			return;
+		}
+
+		$strGap = !empty($GLOBALS['TL_SUBCL'][$strSet]['gap']) ? ',sc_gapdefault,sc_gap' : '';
+
+		$strEquilize = '';
+		if (!empty($GLOBALS['TL_SUBCL'][$strSet]['equalize']))
+		{
+			$strEquilize = '{colheight_legend:hide},sc_equalize;';
+		}
+
 		$GLOBALS['TL_DCA']['tl_content']['palettes']['colsetStart'] = '{type_legend},type;{colset_legend},sc_name,sc_type,sc_color'.$strGap.';'.$strEquilize.'{protected_legend:hide},protected;{expert_legend:hide},guests,invisible,cssID,space';
-		
 	}
-	
-	
+
+
 	/**
 	 * Autogenerate an name for the colset if it has not been set yet
 	 * @param mixed
@@ -614,7 +587,7 @@ class tl_content_sc extends tl_content
 		if($arrRow['type'] != 'colsetPart' && $arrRow['type'] != 'colsetEnd')
 		{
 			$href .= '&id='.$arrRow['id'];
-			return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
+			return '<a href="'.$this->addToUrl($href).'" title="'.\Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
 		}
 	
 	}
@@ -626,7 +599,7 @@ class tl_content_sc extends tl_content
 		if($arrRow['type'] != 'colsetPart' && $arrRow['type'] != 'colsetEnd')
 		{
 			$href .= '&id='.$arrRow['id'];
-			return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
+			return '<a href="'.$this->addToUrl($href).'" title="'.\Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
 		}
 	
 	}
@@ -638,7 +611,7 @@ class tl_content_sc extends tl_content
 		if($arrRow['type'] != 'colsetPart' && $arrRow['type'] != 'colsetEnd')
 		{
 			$href .= '&id='.$arrRow['id'];
-			return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
+			return '<a href="'.$this->addToUrl($href).'" title="'.\Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
 		}
 	
 	}
@@ -822,4 +795,3 @@ class tl_content_sc extends tl_content
 		
 	}
 }
-?>

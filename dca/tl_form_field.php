@@ -26,6 +26,7 @@
  * @filesource
  */
 
+use Contao\StringUtil;
 
 /**
  * Table tl_form_field
@@ -471,7 +472,7 @@ class tl_form_subcols extends tl_form_field
 		if($arrRow['type'] != 'formcolpart' && $arrRow['type'] != 'formcolend')
 		{
 			$href .= '&amp;id='.$arrRow['id'];
-			return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
+			return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
 		}
 	
 	}
@@ -483,7 +484,7 @@ class tl_form_subcols extends tl_form_field
 		if($arrRow['type'] != 'formcolpart' && $arrRow['type'] != 'formcolend')
 		{
 			$href .= '&amp;id='.$arrRow['id'];
-			return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
+			return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
 		}
 	
 	}
@@ -495,7 +496,7 @@ class tl_form_subcols extends tl_form_field
 		if($arrRow['type'] != 'formcolpart' && $arrRow['type'] != 'formcolend')
 		{
 			$href .= '&amp;id='.$arrRow['id'];
-			return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
+			return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
 		}
 	
 	}
@@ -620,5 +621,3 @@ class tl_form_subcols extends tl_form_field
 	}
 	
 }
-
-?>
