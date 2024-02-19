@@ -110,7 +110,11 @@ class tl_module_sc extends tl_module
 	public function createPalette(DataContainer $dc)
 	{	
 		$strSet = ($GLOBALS['TL_CONFIG']['subcolumns'] ?? 'yaml3') ?: 'yaml3';
-			
+
+        if (empty($GLOBALS['TL_SUBCL'][$strSet])) {
+            return;
+        }
+
 		$strGap = $GLOBALS['TL_SUBCL'][$strSet]['gap'] ? ',sc_gapdefault,sc_gap' : false;
 		$strEquilize = isset($GLOBALS['TL_SUBCL'][$strSet]['equalize']) && $GLOBALS['TL_SUBCL'][$strSet]['equalize'] ? ',sc_equalize;' : false;
 		
