@@ -7,9 +7,10 @@ use HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle;
 
 class SubcolumnTypes
 {
+    const DEFAULT_TYPE = 'yaml3';
     protected static string $strSet;
 
-    public static function compatSetType(string $default = 'yaml3'): string
+    public static function compatSetType(string $default = self::DEFAULT_TYPE): string
     {
         if (class_exists(SubColumnsBootstrapBundle::class)) {
             return SubColumnsBootstrapBundle::getProfile();

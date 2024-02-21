@@ -28,6 +28,9 @@
 
 namespace FelixPfeiffer\Subcolumns;
 
+use Contao\BackendTemplate;
+use Contao\FrontendTemplate;
+use Contao\System;
 use HeimrichHannot\Subcolumns\SubcolumnTypes;
 use HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle;
 
@@ -58,6 +61,58 @@ class FormColStart extends \Widget
 		return;
 	}
 
+    protected function generateBackend(): string
+    {
+        $arrColor = unserialize($this->fsc_color);
+
+        if(count($arrColor) === 2 && empty($arrColor[1])) {
+            $arrColor = '';
+        } else {
+            $arrColor  = $this->compileColor($arrColor);
+        }
+
+        if(!$GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'])
+        {
+            $this->Template = new BackendTemplate('be_subcolumns');
+            $this->Template->setColor = $this->compileColor($arrColor);
+            $this->Template->colsetTitle = '### COLUMNSET START '.$this->fsc_type.' <strong>'.$this->fsc_name.'</strong> ###';
+            $this->Template->hint = sprintf($GLOBALS['TL_LANG']['MSC']['contentAfter'],$GLOBALS['TL_LANG']['MSC']['sc_first']);
+
+            return $this->Template->parse();
+        }
+
+        $GLOBALS['TL_CSS']['subcolumns'] = 'system/modules/Subcolumns/assets/be_style.css';
+        $GLOBALS['TL_CSS']['subcolumns_set'] = $GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'] ? $GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'] : false;
+
+        $arrColset = $GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->fsc_type];
+        $strSCClass = $GLOBALS['TL_SUBCL'][$this->strSet]['scclass'];
+        $blnInside = $GLOBALS['TL_SUBCL'][$this->strSet]['inside'];
+
+        $intCountContainers = count($GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->fsc_type]);
+
+        $strMiniset = '';
+
+        if($GLOBALS['TL_CSS']['subcolumns_set'])
+        {
+            $strMiniset = '<div class="colsetexample '.$strSCClass.'">';
+
+            for($i=0;$i<$intCountContainers;$i++)
+            {
+                $arrPresentColset = $arrColset[$i];
+                $strMiniset .= '<div class="'.$arrPresentColset[0].($i==0 ? ' active' : '').'">'.($blnInside ? '<div class="'.$arrPresentColset[1].'">' : '').($i+1).($blnInside ? '</div>' : '').'</div>';
+            }
+
+            $strMiniset .= '</div>';
+        }
+
+        $this->Template = new BackendTemplate('be_subcolumns');
+        $this->Template->setColor = $arrColor;
+        $this->Template->colsetTitle = '### COLUMNSET START '.$this->fsc_type.' <strong>'.$this->fsc_name.'</strong> ###';
+        $this->Template->visualSet = $strMiniset;
+        $this->Template->hint = sprintf($GLOBALS['TL_LANG']['MSC']['contentAfter'],$GLOBALS['TL_LANG']['MSC']['sc_first']);
+
+        return $this->Template->parse();
+    }
 
 	/**
 	 * Generate the widget and return it as string
@@ -67,61 +122,14 @@ class FormColStart extends \Widget
 	{
         $this->strSet = SubcolumnTypes::compatSetType();
 
-		if (TL_MODE == 'BE')
-		{
-            $arrColor = unserialize($this->fsc_color);
+        $scopeMatcher = System::getContainer()->get('contao.routing.scope_matcher');
+        $requestStack = System::getContainer()->get('request_stack');
 
-            if(count($arrColor) === 2 && empty($arrColor[1])) {
-                $arrColor = '';
-            } else {
-                $arrColor  = $this->compileColor($arrColor);
-            }
+        if ($scopeMatcher->isBackendRequest($requestStack->getCurrentRequest()))
+        {
+            return $this->generateBackend();
+        }
 
-            if(!$GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'])
-            {
-                $this->Template = new \BackendTemplate('be_subcolumns');
-                $this->Template->setColor = $this->compileColor($arrColor);
-                $this->Template->colsetTitle = '### COLUMNSET START '.$this->fsc_type.' <strong>'.$this->fsc_name.'</strong> ###';
-                $this->Template->hint = sprintf($GLOBALS['TL_LANG']['MSC']['contentAfter'],$GLOBALS['TL_LANG']['MSC']['sc_first']);
-
-                return $this->Template->parse();
-            }
-
-            $GLOBALS['TL_CSS']['subcolumns'] = 'system/modules/Subcolumns/assets/be_style.css';
-            $GLOBALS['TL_CSS']['subcolumns_set'] = $GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'] ? $GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'] : false;
-
-            $arrColset = $GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->fsc_type];
-            $strSCClass = $GLOBALS['TL_SUBCL'][$this->strSet]['scclass'];
-            $blnInside = $GLOBALS['TL_SUBCL'][$this->strSet]['inside'];
-
-            $intCountContainers = count($GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->fsc_type]);
-
-            $strMiniset = '';
-
-            if($GLOBALS['TL_CSS']['subcolumns_set'])
-            {
-                $strMiniset = '<div class="colsetexample '.$strSCClass.'">';
-
-                for($i=0;$i<$intCountContainers;$i++)
-                {
-                    $arrPresentColset = $arrColset[$i];
-                    $strMiniset .= '<div class="'.$arrPresentColset[0].($i==0 ? ' active' : '').'">'.($blnInside ? '<div class="'.$arrPresentColset[1].'">' : '').($i+1).($blnInside ? '</div>' : '').'</div>';
-                }
-
-                $strMiniset .= '</div>';
-            }
-
-            $this->Template = new \BackendTemplate('be_subcolumns');
-            $this->Template->setColor = $arrColor;
-            $this->Template->colsetTitle = '### COLUMNSET START '.$this->fsc_type.' <strong>'.$this->fsc_name.'</strong> ###';
-            $this->Template->visualSet = $strMiniset;
-            $this->Template->hint = sprintf($GLOBALS['TL_LANG']['MSC']['contentAfter'],$GLOBALS['TL_LANG']['MSC']['sc_first']);
-
-            return $this->Template->parse();
-
-
-		}
-		
 		/**
 		 * CSS Code in das Pagelayout einfügen
 		 */
@@ -134,7 +142,7 @@ class FormColStart extends \Widget
 		$container = $GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->fsc_type];
 		$useGap = $GLOBALS['TL_SUBCL'][$this->strSet]['gap'];
 		
-		$objTemplate = new \FrontendTemplate($this->strColTemplate);
+		$objTemplate = new FrontendTemplate($this->strColTemplate);
 		
 		if($this->fsc_gapuse == 1 && $useGap)
 		{
@@ -208,14 +216,14 @@ class FormColStart extends \Widget
      * @return array
      * @see http://de3.php.net/manual/de/function.hexdec.php#99478
      */
-    protected function convertHexColor($color, $blnWriteToFile=false, $vars=array())
+    protected function convertHexColor($color, $blnWriteToFile=false, $vars=array()): array
     {
         // Support global variables
         if (strncmp($color, '$', 1) === 0)
         {
             if (!$blnWriteToFile)
             {
-                return array($color);
+                return [$color];
             }
             else
             {
@@ -223,7 +231,7 @@ class FormColStart extends \Widget
             }
         }
 
-        $rgb = array();
+        $rgb = [];
 
         // Try to convert using bitwise operation
         if (strlen($color) == 6)
@@ -246,5 +254,3 @@ class FormColStart extends \Widget
     }
 
 }
-
-?>
