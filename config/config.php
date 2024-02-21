@@ -24,6 +24,11 @@
 /**
  * # CONTENT ELEMENTS
  */
+
+use FelixPfeiffer\Subcolumns\FormColEnd;
+use FelixPfeiffer\Subcolumns\FormColPart;
+use FelixPfeiffer\Subcolumns\FormColStart;
+
 $GLOBALS['TL_CTE']['subcolumn'] = [
     'colsetStart' => 'Subcolumns\\colsetStart',
     'colsetPart' => 'Subcolumns\\colsetPart',
@@ -37,16 +42,16 @@ array_splice($GLOBALS['FE_MOD']['application'], 4, 0, [
 /**
  * Form fields
  */
-$GLOBALS['TL_FFL']['formcolstart'] = 'Subcolumns\\FormColStart';
-$GLOBALS['TL_FFL']['formcolpart'] = 'Subcolumns\\FormColPart';
-$GLOBALS['TL_FFL']['formcolend'] = 'Subcolumns\\FormColEnd';
+$GLOBALS['TL_FFL']['formcolstart'] = FormColStart::class;
+$GLOBALS['TL_FFL']['formcolpart'] = FormColPart::class;
+$GLOBALS['TL_FFL']['formcolend'] = FormColEnd::class;
 
 /**
  * Hooks
  */
 #$GLOBALS['TL_HOOKS']['clipboardContentTitle'][] = array('SemanticHTML5Helper', 'clipboardContentTitle');
-$GLOBALS['TL_HOOKS']['clipboardCopy'][] = ['tl_content_sc', 'clipboardCopy'];
-$GLOBALS['TL_HOOKS']['clipboardCopyAll'][] = ['tl_subcolumnsCallback', 'clipboardCopyAll'];
+$GLOBALS['TL_HOOKS']['clipboardCopy'][] = [tl_content_sc::class, 'clipboardCopy'];
+$GLOBALS['TL_HOOKS']['clipboardCopyAll'][] = [tl_subcolumnsCallback::class, 'clipboardCopyAll'];
 
 /**
  * Einrücken von Elementen

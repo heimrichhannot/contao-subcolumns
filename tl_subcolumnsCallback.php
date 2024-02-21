@@ -18,6 +18,9 @@
  * @license    CC-A 2.0
  */
 
+use Contao\Backend;
+use Contao\DataContainer;
+
 /**
  * Class tl_subcolumnsCallback
  *
@@ -32,7 +35,7 @@ class tl_subcolumnsCallback extends Backend
 	/*
 	 * Get all sets from the configuration array
 	 */
-	public function getSets()
+	public function getSets(): array
 	{
 		$arrSets = array();
 		
@@ -95,8 +98,8 @@ class tl_subcolumnsCallback extends Backend
      * 
      * @param array $arrIds
      */
-    public function clipboardCopyAll($arrIds)
-    {
+    public function clipboardCopyAll($arrIds): void
+	{
         $arrIds = array_keys(array_flip($arrIds));
 		
 		$objDb = $this->Database->execute("SELECT DISTINCT pid FROM tl_content WHERE id IN (".implode(',',$arrIds).")");
@@ -116,7 +119,7 @@ class tl_subcolumnsCallback extends Backend
      * 
      * @param integer $pid
      */
-	public function copyCheck($pid)
+	public function copyCheck($pid): void
 	{
 		$row = $this->Database->prepare("SELECT id, sc_childs, sc_parent FROM tl_content WHERE pid=? AND type=? ORDER BY sorting")
 			->execute($pid, 'colsetStart');
@@ -170,7 +173,7 @@ class tl_subcolumnsCallback extends Backend
 
 	}
 	
-	public function formCheck($intId,DataContainer $dc)
+	public function formCheck(int|string $intId, DataContainer $dc)
 	{
 		if($intId==0) return '';
 		
@@ -209,5 +212,3 @@ class tl_subcolumnsCallback extends Backend
 	}
 
 }
-
-?>
