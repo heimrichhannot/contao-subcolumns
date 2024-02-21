@@ -55,7 +55,10 @@ class colsetPart extends ContentElement
 	{
         $this->strSet = SubcolumnTypes::compatSetType();
 		
-		if (TL_MODE == 'BE')
+		$scopeMatcher = System::getContainer()->get('contao.routing.scope_matcher');
+        $requestStack = System::getContainer()->get('request_stack');
+
+		if ($scopeMatcher->isBackendRequest($requestStack->getCurrentRequest()))
 		{
             $colID = null;
             switch($this->sc_sortid)

@@ -34,6 +34,7 @@
  * Table tl_content
  */
 
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\System;
 use HeimrichHannot\Subcolumns\SubcolumnTypes;
@@ -543,17 +544,23 @@ class tl_content_sc extends tl_content
 			 */
 			if($delRecord['type'] == 'colsetPart' || $delRecord['type'] == 'colsetEnd')
 			{
-				$parent = $this->Database->prepare("SELECT sc_childs FROM tl_content WHERE id=?")
-										  ->execute($delRecord['sc_parent'])
-										  ->fetchAssoc();
-				$childs = $parent['sc_childs'] != "" ? unserialize($parent['sc_childs']) : array();
-				
-				$eraseArray[] = $delRecord['sc_parent'];
-				
-				foreach($childs as $wert)
-				{
-					if($wert != $delRecord['id']) $eraseArray[] = $wert;
-				}
+				$parent = Database::getInstance()
+                    ->prepare("SELECT sc_childs FROM tl_content WHERE id=?")
+                    ->execute($delRecord['sc_parent'])
+                    ->fetchAssoc();
+
+                if (!$parent) {
+                    return false;
+                }
+
+                $childs = $parent['sc_childs'] != "" ? unserialize($parent['sc_childs']) : array();
+
+                $eraseArray[] = $delRecord['sc_parent'];
+
+                foreach($childs as $wert)
+                {
+                    if($wert != $delRecord['id']) $eraseArray[] = $wert;
+                }
 			}
 			
 			if(count($eraseArray) > 0)
@@ -561,8 +568,9 @@ class tl_content_sc extends tl_content
 								
 				for($i = 0;$i < count($eraseArray); $i++)
 				{
-					$this->Database->prepare("DELETE FROM tl_content WHERE id=?")
-										  ->execute($eraseArray[$i]);
+					Database::getInstance()
+                        ->prepare("DELETE FROM tl_content WHERE id=?")
+                        ->execute($eraseArray[$i]);
 				}
 				
 			}

@@ -25,14 +25,17 @@
  * # CONTENT ELEMENTS
  */
 
+use FelixPfeiffer\Subcolumns\colsetEnd;
+use FelixPfeiffer\Subcolumns\colsetPart;
+use FelixPfeiffer\Subcolumns\colsetStart;
 use FelixPfeiffer\Subcolumns\FormColEnd;
 use FelixPfeiffer\Subcolumns\FormColPart;
 use FelixPfeiffer\Subcolumns\FormColStart;
 
 $GLOBALS['TL_CTE']['subcolumn'] = [
-    'colsetStart' => 'Subcolumns\\colsetStart',
-    'colsetPart' => 'Subcolumns\\colsetPart',
-    'colsetEnd' => 'Subcolumns\\colsetEnd'
+    'colsetStart' => colsetStart::class,
+    'colsetPart' => colsetPart::class,
+    'colsetEnd' => colsetEnd::class
 ];
 
 array_splice($GLOBALS['FE_MOD']['application'], 4, 0, [

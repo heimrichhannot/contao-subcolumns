@@ -24,6 +24,7 @@ namespace FelixPfeiffer\Subcolumns;
 
 use Contao\BackendTemplate;
 use Contao\ContentElement;
+use Contao\System;
 use Exception;
 use HeimrichHannot\Subcolumns\SubcolumnTypes;
 
@@ -52,11 +53,14 @@ class colsetStart extends ContentElement
 	 * Display a wildcard in the back end
 	 * @return string
 	 */
-	public function generate()
-	{
+	public function generate(): string
+    {
         $this->strSet = SubcolumnTypes::compatSetType();
 
-		if (TL_MODE == 'BE')
+        $scopeMatcher = System::getContainer()->get('contao.routing.scope_matcher');
+        $requestStack = System::getContainer()->get('request_stack');
+
+		if ($scopeMatcher->isBackendRequest($requestStack->getCurrentRequest()))
 		{
 
             $arrColor = \unserialize($this->sc_color);
