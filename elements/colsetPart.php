@@ -23,6 +23,7 @@ namespace FelixPfeiffer\Subcolumns;
 
 use Contao\BackendTemplate;
 use Contao\ContentElement;
+use Contao\System;
 use HeimrichHannot\Subcolumns\SubcolumnTypes;
 
 /**
@@ -109,7 +110,7 @@ class colsetPart extends ContentElement
 
             $strMiniset .= '</div>';
 
-            $this->Template = new \BackendTemplate('be_subcolumns');
+            $this->Template = new BackendTemplate('be_subcolumns');
             $this->Template->setColor = $this->compileColor($arrColor);
             $this->Template->colsetTitle = '### COLUMNSET START '.$this->sc_type.' <strong>'.$this->sc_name.'</strong> ###';
             $this->Template->visualSet = $strMiniset;
@@ -222,7 +223,7 @@ class colsetPart extends ContentElement
         }
         else
         {
-            return 'rgba(' . implode(',', $this->convertHexColor($color[0], $blnWriteToFile, $vars)) . ','. ($color[1] / 100) .')';
+            return 'rgba(' . implode(',', $this->convertHexColor($color[0], $blnWriteToFile ?? false, $vars ?? [])) . ','. ($color[1] / 100) .')';
         }
     }
 

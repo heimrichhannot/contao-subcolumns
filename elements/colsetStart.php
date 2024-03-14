@@ -24,6 +24,8 @@ namespace FelixPfeiffer\Subcolumns;
 
 use Contao\BackendTemplate;
 use Contao\ContentElement;
+use Contao\FrontendTemplate;
+use Contao\StringUtil;
 use Contao\System;
 use Exception;
 use HeimrichHannot\Subcolumns\SubcolumnTypes;
@@ -62,23 +64,26 @@ class colsetStart extends ContentElement
 
 		if ($scopeMatcher->isBackendRequest($requestStack->getCurrentRequest()))
 		{
-
-            $arrColor = \unserialize($this->sc_color);
+            $arrColor = StringUtil::deserialize($this->sc_color);
+            $this->Template = new BackendTemplate('be_subcolumns');
+            $this->Template->setColor = $this->compileColor($arrColor);
+            $this->Template->colsetTitle = '### COLUMNSET START '.$this->sc_type.' <strong>'.$this->sc_name.'</strong> ###';
+            $this->Template->hint = \sprintf($GLOBALS['TL_LANG']['MSC']['contentAfter'], $GLOBALS['TL_LANG']['MSC']['sc_first']);
 
             if (!($GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'] ?? null))
             {
-                $this->Template = new BackendTemplate('be_subcolumns');
-                $this->Template->setColor = $this->compileColor($arrColor);
-                $this->Template->colsetTitle = '### COLUMNSET START '.$this->sc_type.' <strong>'.$this->sc_name.'</strong> ###';
-                $this->Template->hint = \sprintf($GLOBALS['TL_LANG']['MSC']['contentAfter'],$GLOBALS['TL_LANG']['MSC']['sc_first']);
-
                 return $this->Template->parse();
             }
 
             $GLOBALS['TL_CSS']['subcolumns'] = 'system/modules/Subcolumns/assets/be_style.css';
-            $GLOBALS['TL_CSS']['subcolumns_set'] = $GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'] ? $GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'] : false;
+            $GLOBALS['TL_CSS']['subcolumns_set'] = ($GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'] ?? null) ?: false;
 
-            $arrColset = $GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->sc_type];
+            $arrColset = $GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->sc_type] ?? null;
+            if ($arrColset === null)
+            {
+                return $this->Template->parse();
+            }
+
             $strSCClass = $GLOBALS['TL_SUBCL'][$this->strSet]['scclass'];
             $blnInside = $GLOBALS['TL_SUBCL'][$this->strSet]['inside'];
 
@@ -99,11 +104,7 @@ class colsetStart extends ContentElement
                 $strMiniset .= '</div>';
             }
 
-            $this->Template = new BackendTemplate('be_subcolumns');
-            $this->Template->setColor = $this->compileColor($arrColor);
-            $this->Template->colsetTitle = '### COLUMNSET START '.$this->sc_type.' <strong>'.$this->sc_name.'</strong> ###';
             $this->Template->visualSet = $strMiniset;
-            $this->Template->hint = \sprintf($GLOBALS['TL_LANG']['MSC']['contentAfter'],$GLOBALS['TL_LANG']['MSC']['sc_first']);
 
             return $this->Template->parse();
 
@@ -196,19 +197,19 @@ class colsetStart extends ContentElement
      * @param array
      * @return string
      */
-    protected function compileColor($color)
+    protected function compileColor($color): string
     {
         if (!is_array($color))
         {
             return "#$color";
         }
-        elseif (!isset($color[1]) || empty($color[1]))
+        elseif (empty($color[1]))
         {
             return "#$color[0]";
         }
         else
         {
-            return 'rgba(' . implode(',', $this->convertHexColor($color[0], $blnWriteToFile, $vars)) . ','. ($color[1] / 100) .')';
+            return 'rgba(' . implode(',', $this->convertHexColor($color[0], $blnWriteToFile ?? false, $vars ?? [])) . ','. ($color[1] / 100) .')';
         }
     }
 

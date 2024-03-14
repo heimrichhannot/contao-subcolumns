@@ -33,7 +33,6 @@ use Contao\FrontendTemplate;
 use Contao\System;
 use Contao\Widget;
 use HeimrichHannot\Subcolumns\SubcolumnTypes;
-use HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle;
 
 /**
  * Class FormColPart

@@ -142,7 +142,7 @@ class tl_form_subcols extends tl_form_field
 	 */
 	public function getAllTypes()
 	{
-		$strSet = $GLOBALS['TL_CONFIG']['subcolumns'] ? $GLOBALS['TL_CONFIG']['subcolumns'] : 'yaml3';
+		$strSet = $GLOBALS['TL_CONFIG']['subcolumns'] ?: 'yaml3';
 		
 		return array_keys($GLOBALS['TL_SUBCL'][$strSet]['sets']);
 	}

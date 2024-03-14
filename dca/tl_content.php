@@ -37,6 +37,7 @@
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\System;
+use FelixPfeiffer\Subcolumns\Polyfill;
 use HeimrichHannot\Subcolumns\SubcolumnTypes;
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['sc_name'] = array
@@ -223,15 +224,16 @@ class tl_content_sc extends tl_content
 		return $this->createColset($dc->activeRecord,$sc_type,$arrColset,$arrChilds);
 	}
 	
-	private function createColset($objElement,$sc_type,$arrColset,$arrChilds='')
+	private function createColset($objElement, $sc_type, $arrColset, $arrChilds = '')
 	{
 		if (!is_array($arrColset)) {
 			return false;
 		}
 
 		$intColcount = count($arrColset) - 2;
-		
-		$this->log('ID= ' . $objElement->id, 'SpaltensetHilfe createColset()', TL_ACCESS);
+
+        $logger = System::getContainer()->get('logger');
+		$logger->info('ID= ' . $objElement->id . ' :: SpaltensetHilfe createColset()');
 		
 		/* Neues Spaltenset anlegen */
 		if($arrChilds=='')
@@ -239,21 +241,22 @@ class tl_content_sc extends tl_content
 			$arrChilds = array();
 			$this->moveRows($objElement->pid,$objElement->ptable,$objElement->sorting,128 * ( count($arrColset) + 1 ));
 			
-			$arrSet = array('pid' => $objElement->pid,
-                            'ptable' => $objElement->ptable,
-							'tstamp' => time(),
-							'sorting'=>0,
-							'type' => 'colsetPart',
-							'sc_name'=> '',		
-							'sc_type'=>$sc_type,
-							'sc_parent'=>$objElement->id,
-							'sc_sortid'=>0,
-							'sc_gap' => $objElement->sc_gap,
-							'sc_gapdefault' => $objElement->sc_gapdefault,
-							'sc_color' => $objElement->sc_color
-							);
+			$arrSet = [
+                'pid' => $objElement->pid,
+                'ptable' => $objElement->ptable,
+                'tstamp' => time(),
+                'sorting' => 0,
+                'type' => 'colsetPart',
+                'sc_name'=> '',
+                'sc_type' => $sc_type,
+                'sc_parent' => $objElement->id,
+                'sc_sortid' => 0,
+                'sc_gap' => $objElement->sc_gap,
+                'sc_gapdefault' => $objElement->sc_gapdefault,
+                'sc_color' => $objElement->sc_color
+            ];
 
-            if(in_array('GlobalContentelements',$this->Config->getActiveModules()))
+            if (in_array('GlobalContentelements', Polyfill::legacyPolyfill_getActiveModules()))
             {
                 $arrSet['do'] = $this->Input->get('do');
             }
@@ -290,7 +293,6 @@ class tl_content_sc extends tl_content
 											->execute($objElement->id);
 			
 			return true;
-		
 		}
 		
 		/* Gleiche Spaltenzahl */
@@ -789,13 +791,15 @@ class tl_content_sc extends tl_content
                             ->prepare("Select * FROM tl_content WHERE id=?")
                             ->execute($intId);
 				
-				$strSet = $GLOBALS['TL_CONFIG']['subcolumns'] ? $GLOBALS['TL_CONFIG']['subcolumns'] : 'yaml3';
+				$strSet = ($GLOBALS['TL_CONFIG']['subcolumns'] ?? null) ?: 'yaml3';
 			
 				$sc_type = $objContent->sc_type;
 
 				$arrColset = $GLOBALS['TL_SUBCL'][$strSet]['sets'][$sc_type];
-				
-				$this->log('Values: sc-Type='.$sc_type . ' Values: sc-Colset-Count='.count($arrColset), 'SpaltensetHilfe clipboardCopy()', TL_ACCESS);
+
+                $logger = System::getContainer()->get('logger');
+
+				$logger->info('Values: sc-Type='.$sc_type . ' Values: sc-Colset-Count='.count($arrColset).' :: SpaltensetHilfe clipboardCopy()');
 		
 				$this->createColset($objContent,$sc_type,$arrColset);
 			}
