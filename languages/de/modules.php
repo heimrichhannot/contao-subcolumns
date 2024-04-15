@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
+<?php
 
 /**
  * Contao Open Source CMS
@@ -32,6 +32,3 @@
  * Frontend modules
  */
 $GLOBALS['TL_LANG']['FMD']['subcolumns'] = array('Spaltenset', 'Ordnen Sie mehrere Module in mehreren Spalten an. Die Zuweisung erfolgt wie im Seitenlayout.');
-
-
-?>

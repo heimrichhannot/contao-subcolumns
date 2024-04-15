@@ -26,17 +26,17 @@
  * @filesource
  */
 
+use Contao\DataContainer;
 
 /**
  * Add selectors to tl_module
  */
-$GLOBALS['TL_DCA']['tl_module']['config']['onload_callback'][] = array('tl_module_sc','createPalette');
+$GLOBALS['TL_DCA']['tl_module']['config']['onload_callback'][] = ['tl_module_sc', 'createPalette'];
 
 
 /**
  * Add fields to tl_module
  */
-
 $GLOBALS['TL_DCA']['tl_module']['fields']['sc_type'] = array
 (
 	'label'         	=> &$GLOBALS['TL_LANG']['tl_module']['sc_type'],
@@ -109,8 +109,12 @@ class tl_module_sc extends tl_module
 	 */
 	public function createPalette(DataContainer $dc)
 	{	
-		$strSet = $GLOBALS['TL_CONFIG']['subcolumns'] ? $GLOBALS['TL_CONFIG']['subcolumns'] : 'yaml3';
-			
+		$strSet = ($GLOBALS['TL_CONFIG']['subcolumns'] ?? 'yaml3') ?: 'yaml3';
+
+        if (empty($GLOBALS['TL_SUBCL'][$strSet])) {
+            return;
+        }
+
 		$strGap = $GLOBALS['TL_SUBCL'][$strSet]['gap'] ? ',sc_gapdefault,sc_gap' : false;
 		$strEquilize = isset($GLOBALS['TL_SUBCL'][$strSet]['equalize']) && $GLOBALS['TL_SUBCL'][$strSet]['equalize'] ? ',sc_equalize;' : false;
 		
@@ -122,7 +126,7 @@ class tl_module_sc extends tl_module
 	 */
 	public function getAllTypes()
 	{
-		$strSet = $GLOBALS['TL_CONFIG']['subcolumns'] ? $GLOBALS['TL_CONFIG']['subcolumns'] : 'yaml3';
+		$strSet = ($GLOBALS['TL_CONFIG']['subcolumns'] ?? 'yaml3') ?: 'yaml3';
 		
 		return array_keys($GLOBALS['TL_SUBCL'][$strSet]['sets']);
 	}
@@ -186,4 +190,3 @@ class tl_module_sc extends tl_module
 		return $cols;
 	}
 }
-?>

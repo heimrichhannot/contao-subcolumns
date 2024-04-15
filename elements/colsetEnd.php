@@ -23,6 +23,7 @@ namespace FelixPfeiffer\Subcolumns;
 
 use Contao\BackendTemplate;
 use Contao\ContentElement;
+use Contao\System;
 use HeimrichHannot\Subcolumns\SubcolumnTypes;
 
 /**
@@ -54,50 +55,52 @@ class colsetEnd extends ContentElement
 	{
         $this->strSet = SubcolumnTypes::compatSetType();
 		
-		if (TL_MODE == 'BE')
+		$scopeMatcher = System::getContainer()->get('contao.routing.scope_matcher');
+        $requestStack = System::getContainer()->get('request_stack');
+
+		if (!$scopeMatcher->isBackendRequest($requestStack->getCurrentRequest()))
 		{
+            return parent::generate();
+        }
 
-            $arrColor = unserialize($this->sc_color);
+        $arrColor = unserialize($this->sc_color);
+        $this->Template = new BackendTemplate('be_subcolumns');
+        $this->Template->setColor = $this->compileColor($arrColor);
+        $this->Template->colsetTitle = '### COLUMNSET END '.$this->sc_type.' <strong>'.$this->sc_name.'</strong> ###';
 
-            if(!($GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'] ?? null))
-            {
-                $this->Template = new BackendTemplate('be_subcolumns');
-                $this->Template->setColor = $this->compileColor($arrColor);
-                $this->Template->colsetTitle = '### COLUMNSET START '.$this->sc_type.' <strong>'.$this->sc_name.'</strong> ###';
-
-                return $this->Template->parse();
-            }
-
-            $GLOBALS['TL_CSS']['subcolumns'] = 'system/modules/Subcolumns/assets/be_style.css';
-            $GLOBALS['TL_CSS']['subcolumns_set'] = $GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'];
-
-
-
-            $arrColset = $GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->sc_type];
-            $strSCClass = $GLOBALS['TL_SUBCL'][$this->strSet]['scclass'];
-            $blnInside = $GLOBALS['TL_SUBCL'][$this->strSet]['inside'];
-
-            $intCountContainers = count($GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->sc_type]);
-
-            $strMiniset = '<div class="colsetexample final '.$strSCClass.'">';
-
-            for($i=0;$i<$intCountContainers;$i++)
-            {
-                $arrPresentColset = $arrColset[$i];
-                $strMiniset .= '<div class="'.$arrPresentColset[0].'">'.($blnInside ? '<div class="'.$arrPresentColset[1].'">' : '').($i+1).($blnInside ? '</div>' : '').'</div>';
-            }
-
-            $strMiniset .= '</div>';
-
-            $this->Template = new \BackendTemplate('be_subcolumns');
-            $this->Template->setColor = $this->compileColor($arrColor);
-            $this->Template->colsetTitle = '### COLUMNSET START '.$this->sc_type.' <strong>'.$this->sc_name.'</strong> ###';
-            $this->Template->visualSet = $strMiniset;
-
+        if(!($GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'] ?? null))
+        {
             return $this->Template->parse();
-		}
+        }
 
-		return parent::generate();
+        $GLOBALS['TL_CSS']['subcolumns'] = 'system/modules/Subcolumns/assets/be_style.css';
+        $GLOBALS['TL_CSS']['subcolumns_set'] = $GLOBALS['TL_SUBCL'][$this->strSet]['files']['css'];
+
+        $arrColset = $GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->sc_type] ?? null;
+        if ($arrColset === null)
+        {
+            return $this->Template->parse() . "<div>HALLO</div>";
+        }
+
+        $strSCClass = $GLOBALS['TL_SUBCL'][$this->strSet]['scclass'];
+        $blnInside = $GLOBALS['TL_SUBCL'][$this->strSet]['inside'];
+
+        $intCountContainers = count($GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->sc_type]);
+
+        $strMiniset = '<div class="colsetexample final '.$strSCClass.'">';
+
+        for($i=0;$i<$intCountContainers;$i++)
+        {
+            $arrPresentColset = $arrColset[$i];
+            $strMiniset .= '<div class="'.$arrPresentColset[0].'">'.($blnInside ? '<div class="'.$arrPresentColset[1].'">' : '').($i+1).($blnInside ? '</div>' : '').'</div>';
+        }
+
+        $strMiniset .= '</div>';
+
+        $this->Template->visualSet = $strMiniset;
+
+        return $this->Template->parse();
+
 	}
 	
 	/**
@@ -136,7 +139,7 @@ class colsetEnd extends ContentElement
         }
         else
         {
-            return 'rgba(' . implode(',', $this->convertHexColor($color[0], $blnWriteToFile, $vars)) . ','. ($color[1] / 100) .')';
+            return 'rgba(' . implode(',', $this->convertHexColor($color[0], $blnWriteToFile ?? false, $vars ?? [])) . ','. ($color[1] / 100) .')';
         }
     }
 

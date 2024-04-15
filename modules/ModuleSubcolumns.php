@@ -28,6 +28,9 @@
 
 namespace FelixPfeiffer\Subcolumns;
 
+use Contao\BackendTemplate;
+use Contao\Module;
+use Contao\System;
 use HeimrichHannot\Subcolumns\SubcolumnTypes;
 
 /**
@@ -37,7 +40,7 @@ use HeimrichHannot\Subcolumns\SubcolumnTypes;
  * @author     Felix Pfeiffer <info@felixpfeiffer.com>
  * @package    Subcolumns
  */
-class ModuleSubcolumns extends \Module
+class ModuleSubcolumns extends Module
 {
 	/**
 	 * Template
@@ -54,13 +57,16 @@ class ModuleSubcolumns extends \Module
 	 * Display a wildcard in the back end
 	 * @return string
 	 */
-	public function generate()
-	{
+	public function generate(): string
+    {
 		$this->strSet = SubcolumnTypes::compatSetType();
 		
-		if (TL_MODE == 'BE')
+		$scopeMatcher = System::getContainer()->get('contao.routing.scope_matcher');
+        $requestStack = System::getContainer()->get('request_stack');
+
+		if ($scopeMatcher->isBackendRequest($requestStack->getCurrentRequest()))
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### MODULE SUBCOLUMNS ###';
 			$objTemplate->title = $this->headline;
@@ -78,8 +84,8 @@ class ModuleSubcolumns extends \Module
 	/**
 	 * Generate module
 	 */
-	protected function compile()
-	{
+	protected function compile(): void
+    {
 		
 		/**
 		 * CSS Code in das Pagelayout einfügen
@@ -170,7 +176,7 @@ class ModuleSubcolumns extends \Module
         }
 
 		$this->Template->intCols = count($arrSet);
-		$this->Template->inside = $container[0][1];
+		$this->Template->inside = $container[0][1] ?? null;
 		$this->Template->arrSet = $arrSet;
 		$this->Template->scclass = $equalize . $GLOBALS['TL_SUBCL'][$this->strSet]['scclass'] . ' colcount_' . $l  . ' ' . $this->strSet . ' col-' . $this->sc_type;
 		$this->Template->useInside = $GLOBALS['TL_SUBCL'][$this->strSet]['inside'];

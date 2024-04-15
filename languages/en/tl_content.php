@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * TYPOlight webCMS
@@ -37,5 +37,3 @@ $GLOBALS['TL_LANG']['tl_content']['sc_sortid'] = array('Sorting in the columnset
  */
 $GLOBALS['TL_LANG']['tl_content']['colset_legend']      = 'Columnset settings';
 $GLOBALS['TL_LANG']['tl_content']['colheight_legend']      = 'Column height';
-
-?>

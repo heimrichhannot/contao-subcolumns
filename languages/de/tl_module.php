@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * TYPOlight Open Source CMS
@@ -26,7 +26,6 @@
  * @filesource
  */
 
-
 /**
  * Fields
  */
@@ -36,7 +35,6 @@ $GLOBALS['TL_LANG']['tl_module']['sc_gapdefault'] = array('Spaltenabstand nutzen
 $GLOBALS['TL_LANG']['tl_module']['sc_type'] = array('Spaltenset Typ', 'Wieviele Spalten, mit welchen Breiten soll es geben?<br />Die Zahlen geben die Breite in % an: 25x75 => erste Spalte 25%, zweit Spalte 75% des umschliessenden Containers.');
 $GLOBALS['TL_LANG']['tl_module']['sc_equalize'] = array('gleiche Spaltenhöhe', 'Diese Option setzt alle Spalten auf die Höhe der längsten Spalte. Dies kann sinnvoll genutzt werden, wenn man z.B. Hintergrundgrafiken nutzen möchte.<br />Ein Beispiel findet man auf den Seiten des <a href="http://www.yaml.de/fileadmin/examples/06_layouts_advanced/equal_height_boxes.html" onclick="window.open(this.href); return false;" title="YAML-Framework">YAML-Frameworks</a>.');
 
-
 /**
  * Reference
  */
@@ -44,4 +42,3 @@ $GLOBALS['TL_LANG']['tl_module']['subcolumns_legend']   = 'Spaltenset Auswahl';
 $GLOBALS['TL_LANG']['tl_module']['subcolumns_settings_legend'] = 'Spaltenset Einstellungen';
 $GLOBALS['TL_LANG']['tl_module']['module']       = array('Modul','');
 $GLOBALS['TL_LANG']['tl_module']['column']       = array('Spalte','');
-?>

@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
 /**
  * TYPOlight webCMS
@@ -21,17 +21,13 @@
  * @filesource
  */
 
-
 /**
  * Fields
  */
 $GLOBALS['TL_LANG']['tl_settings']['subcolumns'] = array('Spaltenset', 'Wählen Sie die Spaltenset-Konfiguration, die Sie verwenden möchten.');
 $GLOBALS['TL_LANG']['tl_settings']['subcolumns_gapdefault'] = array('Spaltenset Standardabstand', 'Geben Sie einen Standardabstand für alle Spaltensets auf der Seite ein.');
 
-
 /**
  * Legends
  */
 $GLOBALS['TL_LANG']['tl_settings']['subcolumns_legend']      = 'Spaltenset Einstellungen';
-
-?>

@@ -31,10 +31,13 @@
 
 
 /**
- * Table tl_content 
+ * Table tl_content
  */
 
+use Contao\Database;
 use Contao\DataContainer;
+use Contao\System;
+use FelixPfeiffer\Subcolumns\Polyfill;
 use HeimrichHannot\Subcolumns\SubcolumnTypes;
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['sc_name'] = array
@@ -136,24 +139,11 @@ $GLOBALS['TL_DCA']['tl_content']['config']['ondelete_callback'][] = array('tl_co
 $GLOBALS['TL_DCA']['tl_content']['config']['oncopy_callback'][] = array('tl_content_sc','scCopy');
 
 /**
- * Operations
-**/
-$arrModules = $this->Config->getActiveModules();
-if(!in_array('ce-access',$arrModules))
-{
-	$GLOBALS['TL_DCA']['tl_content']['list']['operations']['edit']['button_callback'] = array('tl_content_sc','showEditOperation'); 
-	$GLOBALS['TL_DCA']['tl_content']['list']['operations']['copy']['button_callback'] = array('tl_content_sc','showCopyOperation'); 
-	#$GLOBALS['TL_DCA']['tl_content']['list']['operations']['delete']['button_callback'] = array('tl_content_sc','showDeleteOperation'); 
-	#$GLOBALS['TL_DCA']['tl_content']['list']['operations']['toggle']['button_callback'] = array('tl_content_sc','toggleIcons'); 
-}
-
-
-/**
- * Erweiterung für die tl_conten-Klasse
+ * Erweiterung für die tl_content-Klasse
  */
 class tl_content_sc extends tl_content
 {
-	/* 
+	/*
 	 * Get the colsets depending on the selection from the settings
 	 */
 	public function getAllTypes()
@@ -166,17 +156,26 @@ class tl_content_sc extends tl_content
 	 * Create the palette for the startelement
 	 */
 	public function createPalette(DataContainer $dc)
-	{	
+	{
 		$strSet = SubcolumnTypes::compatSetType();
-			
-		$strGap = $GLOBALS['TL_SUBCL'][$strSet]['gap'] ? ',sc_gapdefault,sc_gap' : '';
-		$strEquilize = isset($GLOBALS['TL_SUBCL'][$strSet]['equalize']) && $GLOBALS['TL_SUBCL'][$strSet]['equalize']  ? '{colheight_legend:hide},sc_equalize;' : '';
-			
+
+		if (empty($GLOBALS['TL_SUBCL'][$strSet])) {
+			dump("Subcolumns profile '$strSet' not found. Please check your settings.");
+			return;
+		}
+
+		$strGap = !empty($GLOBALS['TL_SUBCL'][$strSet]['gap']) ? ',sc_gapdefault,sc_gap' : '';
+
+		$strEquilize = '';
+		if (!empty($GLOBALS['TL_SUBCL'][$strSet]['equalize']))
+		{
+			$strEquilize = '{colheight_legend:hide},sc_equalize;';
+		}
+
 		$GLOBALS['TL_DCA']['tl_content']['palettes']['colsetStart'] = '{type_legend},type;{colset_legend},sc_name,sc_type,sc_color'.$strGap.';'.$strEquilize.'{protected_legend:hide},protected;{expert_legend:hide},guests,invisible,cssID,space';
-		
 	}
-	
-	
+
+
 	/**
 	 * Autogenerate an name for the colset if it has not been set yet
 	 * @param mixed
@@ -225,15 +224,16 @@ class tl_content_sc extends tl_content
 		return $this->createColset($dc->activeRecord,$sc_type,$arrColset,$arrChilds);
 	}
 	
-	private function createColset($objElement,$sc_type,$arrColset,$arrChilds='')
+	private function createColset($objElement, $sc_type, $arrColset, $arrChilds = '')
 	{
 		if (!is_array($arrColset)) {
 			return false;
 		}
 
 		$intColcount = count($arrColset) - 2;
-		
-		$this->log('ID= ' . $objElement->id, 'SpaltensetHilfe createColset()', TL_ACCESS);
+
+        $logger = System::getContainer()->get('logger');
+		$logger->info('ID= ' . $objElement->id . ' :: SpaltensetHilfe createColset()');
 		
 		/* Neues Spaltenset anlegen */
 		if($arrChilds=='')
@@ -241,21 +241,22 @@ class tl_content_sc extends tl_content
 			$arrChilds = array();
 			$this->moveRows($objElement->pid,$objElement->ptable,$objElement->sorting,128 * ( count($arrColset) + 1 ));
 			
-			$arrSet = array('pid' => $objElement->pid,
-                            'ptable' => $objElement->ptable,
-							'tstamp' => time(),
-							'sorting'=>0,
-							'type' => 'colsetPart',
-							'sc_name'=> '',		
-							'sc_type'=>$sc_type,
-							'sc_parent'=>$objElement->id,
-							'sc_sortid'=>0,
-							'sc_gap' => $objElement->sc_gap,
-							'sc_gapdefault' => $objElement->sc_gapdefault,
-							'sc_color' => $objElement->sc_color
-							);
+			$arrSet = [
+                'pid' => $objElement->pid,
+                'ptable' => $objElement->ptable,
+                'tstamp' => time(),
+                'sorting' => 0,
+                'type' => 'colsetPart',
+                'sc_name'=> '',
+                'sc_type' => $sc_type,
+                'sc_parent' => $objElement->id,
+                'sc_sortid' => 0,
+                'sc_gap' => $objElement->sc_gap,
+                'sc_gapdefault' => $objElement->sc_gapdefault,
+                'sc_color' => $objElement->sc_color
+            ];
 
-            if(in_array('GlobalContentelements',$this->Config->getActiveModules()))
+            if (in_array('GlobalContentelements', Polyfill::legacyPolyfill_getActiveModules()))
             {
                 $arrSet['do'] = $this->Input->get('do');
             }
@@ -292,7 +293,6 @@ class tl_content_sc extends tl_content
 											->execute($objElement->id);
 			
 			return true;
-		
 		}
 		
 		/* Gleiche Spaltenzahl */
@@ -546,17 +546,23 @@ class tl_content_sc extends tl_content
 			 */
 			if($delRecord['type'] == 'colsetPart' || $delRecord['type'] == 'colsetEnd')
 			{
-				$parent = $this->Database->prepare("SELECT sc_childs FROM tl_content WHERE id=?")
-										  ->execute($delRecord['sc_parent'])
-										  ->fetchAssoc();
-				$childs = $parent['sc_childs'] != "" ? unserialize($parent['sc_childs']) : array();
-				
-				$eraseArray[] = $delRecord['sc_parent'];
-				
-				foreach($childs as $wert)
-				{
-					if($wert != $delRecord['id']) $eraseArray[] = $wert;
-				}
+				$parent = Database::getInstance()
+                    ->prepare("SELECT sc_childs FROM tl_content WHERE id=?")
+                    ->execute($delRecord['sc_parent'])
+                    ->fetchAssoc();
+
+                if (!$parent) {
+                    return false;
+                }
+
+                $childs = $parent['sc_childs'] != "" ? unserialize($parent['sc_childs']) : array();
+
+                $eraseArray[] = $delRecord['sc_parent'];
+
+                foreach($childs as $wert)
+                {
+                    if($wert != $delRecord['id']) $eraseArray[] = $wert;
+                }
 			}
 			
 			if(count($eraseArray) > 0)
@@ -564,8 +570,9 @@ class tl_content_sc extends tl_content
 								
 				for($i = 0;$i < count($eraseArray); $i++)
 				{
-					$this->Database->prepare("DELETE FROM tl_content WHERE id=?")
-										  ->execute($eraseArray[$i]);
+					Database::getInstance()
+                        ->prepare("DELETE FROM tl_content WHERE id=?")
+                        ->execute($eraseArray[$i]);
 				}
 				
 			}
@@ -590,7 +597,7 @@ class tl_content_sc extends tl_content
 		if($arrRow['type'] != 'colsetPart' && $arrRow['type'] != 'colsetEnd')
 		{
 			$href .= '&id='.$arrRow['id'];
-			return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
+			return '<a href="'.$this->addToUrl($href).'" title="'.\Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
 		}
 	
 	}
@@ -602,7 +609,7 @@ class tl_content_sc extends tl_content
 		if($arrRow['type'] != 'colsetPart' && $arrRow['type'] != 'colsetEnd')
 		{
 			$href .= '&id='.$arrRow['id'];
-			return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
+			return '<a href="'.$this->addToUrl($href).'" title="'.\Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
 		}
 	
 	}
@@ -614,7 +621,7 @@ class tl_content_sc extends tl_content
 		if($arrRow['type'] != 'colsetPart' && $arrRow['type'] != 'colsetEnd')
 		{
 			$href .= '&id='.$arrRow['id'];
-			return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
+			return '<a href="'.$this->addToUrl($href).'" title="'.\Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
 		}
 	
 	}
@@ -784,13 +791,15 @@ class tl_content_sc extends tl_content
                             ->prepare("Select * FROM tl_content WHERE id=?")
                             ->execute($intId);
 				
-				$strSet = $GLOBALS['TL_CONFIG']['subcolumns'] ? $GLOBALS['TL_CONFIG']['subcolumns'] : 'yaml3';
+				$strSet = ($GLOBALS['TL_CONFIG']['subcolumns'] ?? null) ?: 'yaml3';
 			
 				$sc_type = $objContent->sc_type;
 
 				$arrColset = $GLOBALS['TL_SUBCL'][$strSet]['sets'][$sc_type];
-				
-				$this->log('Values: sc-Type='.$sc_type . ' Values: sc-Colset-Count='.count($arrColset), 'SpaltensetHilfe clipboardCopy()', TL_ACCESS);
+
+                $logger = System::getContainer()->get('logger');
+
+				$logger->info('Values: sc-Type='.$sc_type . ' Values: sc-Colset-Count='.count($arrColset).' :: SpaltensetHilfe clipboardCopy()');
 		
 				$this->createColset($objContent,$sc_type,$arrColset);
 			}
@@ -798,4 +807,3 @@ class tl_content_sc extends tl_content
 		
 	}
 }
-?>
