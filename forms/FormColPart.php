@@ -28,6 +28,8 @@
 
 namespace FelixPfeiffer\Subcolumns;
 
+use Contao\BackendTemplate;
+use Contao\FrontendTemplate;
 use HeimrichHannot\SubColumnsBootstrapBundle\SubColumnsBootstrapBundle;
 
 /**
@@ -115,7 +117,7 @@ class FormColPart extends \Widget
             $strSCClass = $GLOBALS['TL_SUBCL'][$this->strSet]['scclass'];
             $blnInside = $GLOBALS['TL_SUBCL'][$this->strSet]['inside'];
 
-            $intCountContainers = count($GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->fsc_type]);
+            $intCountContainers = count($GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->fsc_type] ?? []);
 
             $strMiniset = '<div class="colsetexample '.$strSCClass.'">';
 
@@ -127,7 +129,7 @@ class FormColPart extends \Widget
 
             $strMiniset .= '</div>';
 
-            $this->Template = new \BackendTemplate('be_subcolumns');
+            $this->Template = new BackendTemplate('be_subcolumns');
             $this->Template->setColor = $arrColor;
             $this->Template->colsetTitle = '### COLUMNSET START '.$this->fsc_type.' <strong>'.$this->fsc_name.'</strong> ###';
             $this->Template->visualSet = $strMiniset;
@@ -137,9 +139,12 @@ class FormColPart extends \Widget
 		}
 		
 		$arrCounts = array('1'=>'second','2'=>'third','3'=>'fourth','4'=>'fifth');
-		$container = $GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->fsc_type];
+		$container = $GLOBALS['TL_SUBCL'][$this->strSet]['sets'][$this->fsc_type] ?? null;
+        if (!$container) {
+            return;
+        }
 		
-		$objTemplate = new \FrontendTemplate($this->strColTemplate);
+		$objTemplate = new FrontendTemplate($this->strColTemplate);
 		
 		if($this->fsc_gapuse == 1)
 		{
